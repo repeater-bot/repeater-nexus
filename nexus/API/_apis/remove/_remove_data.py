@@ -1,4 +1,4 @@
-from fastapi.responses import ORJSONResponse
+from fastapi.responses import JSONResponse
 from loguru import logger
 from uuid import UUID
 
@@ -12,7 +12,7 @@ async def remove_data(pool: str, resource_id: str, data_id: str):
     try:
         storage = Storage(path, pool)
     except ValueError as e:
-        return ORJSONResponse(
+        return JSONResponse(
             {
                 "status": "error",
                 "message": str(e)
@@ -22,7 +22,7 @@ async def remove_data(pool: str, resource_id: str, data_id: str):
     try:
         resource_uuid = UUID(resource_id)
     except ValueError:
-        return ORJSONResponse(
+        return JSONResponse(
             {
                 "status": "error",
                 "message": "Invalid file id"
@@ -32,7 +32,7 @@ async def remove_data(pool: str, resource_id: str, data_id: str):
     try:
         storage.remove_data(resource_uuid, data_id)
     except ValueError as e:
-        return ORJSONResponse(
+        return JSONResponse(
             {
                 "status": "error",
                 "message": str(e)
@@ -40,7 +40,7 @@ async def remove_data(pool: str, resource_id: str, data_id: str):
             status_code=400
         )
         
-    return ORJSONResponse(
+    return JSONResponse(
         content = {
             "status": "success",
             "message": "File removed"

@@ -1,6 +1,6 @@
 import orjson
 
-from fastapi.responses import ORJSONResponse
+from fastapi.responses import JSONResponse
 from loguru import logger
 from uuid import UUID
 
@@ -16,7 +16,7 @@ async def download_json(pool: str, resources_id: str, data_id: str):
     try:
         storage = Storage(path, pool)
     except ValueError as e:
-        return ORJSONResponse(
+        return JSONResponse(
             DownloadResponse(
                 status = "error",
                 message = str(e)
@@ -26,7 +26,7 @@ async def download_json(pool: str, resources_id: str, data_id: str):
     try:
         file_uuid = UUID(resources_id)
     except ValueError:
-        return ORJSONResponse(
+        return JSONResponse(
             DownloadResponse(
                 status = "error",
                 message = "Invalid file id"
@@ -35,7 +35,7 @@ async def download_json(pool: str, resources_id: str, data_id: str):
         )
     
     if not storage.data_exists(file_uuid, data_id):
-        return ORJSONResponse(
+        return JSONResponse(
             DownloadResponse(
                 status = "error",
                 message = "File not found"
@@ -52,7 +52,7 @@ async def download_json(pool: str, resources_id: str, data_id: str):
             resource_id = resources_id,
             data_id = data_id
         )
-        return ORJSONResponse(
+        return JSONResponse(
             DownloadResponse(
                 status = "error",
                 message = "Failed to decode file"
@@ -60,7 +60,7 @@ async def download_json(pool: str, resources_id: str, data_id: str):
             status_code=500
         )
 
-    return ORJSONResponse(
+    return JSONResponse(
         DownloadResponse(
             status = "success",
             message = "File loaded",

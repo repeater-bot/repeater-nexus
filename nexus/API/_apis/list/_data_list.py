@@ -1,7 +1,7 @@
 import orjson
 
 from uuid import UUID
-from fastapi.responses import ORJSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from loguru import logger
 
 from ..._resource import Resource
@@ -14,7 +14,7 @@ async def data_list(pool: str, resource_id: str):
     try:
         storage = Storage(path, pool)
     except ValueError as e:
-        return ORJSONResponse(
+        return JSONResponse(
             status_code = 404,
             content = {
                 "error": str(e)
@@ -24,7 +24,7 @@ async def data_list(pool: str, resource_id: str):
     try:
         uuid = UUID(resource_id)
     except ValueError as e:
-        return ORJSONResponse(
+        return JSONResponse(
             status_code = 404,
             content = {
                 "error": str(e)
@@ -34,7 +34,7 @@ async def data_list(pool: str, resource_id: str):
     logger.info(
         "Getting file list"
     )
-    return ORJSONResponse(
+    return JSONResponse(
         content = list(storage.datas(resource_id))
     )
 
@@ -44,7 +44,7 @@ async def data_list_stream(pool: str, resource_id: str):
     try:
         storage = Storage(path, pool)
     except ValueError as e:
-        return ORJSONResponse(
+        return JSONResponse(
             status_code = 404,
             content = {
                 "error": str(e)

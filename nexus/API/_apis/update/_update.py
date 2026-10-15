@@ -1,6 +1,6 @@
 import orjson
 
-from fastapi.responses import ORJSONResponse
+from fastapi.responses import JSONResponse
 from loguru import logger
 from uuid import UUID
 
@@ -15,7 +15,7 @@ async def update(pool: str, resource_id: str, request: UpdateRequest):
     try:
         storage = Storage(path, pool)
     except ValueError as e:
-        return ORJSONResponse(
+        return JSONResponse(
             {
                 "status": "error",
                 "message": str(e)
@@ -26,7 +26,7 @@ async def update(pool: str, resource_id: str, request: UpdateRequest):
     try:
         resource_uuid = UUID(resource_id)
     except ValueError:
-        return ORJSONResponse(
+        return JSONResponse(
             {
                 "status": "error",
                 "message": "Invalid Resource ID"
@@ -35,7 +35,7 @@ async def update(pool: str, resource_id: str, request: UpdateRequest):
         )
 
     if not storage.resource_exists(resource_uuid):
-        return ORJSONResponse(
+        return JSONResponse(
             {
                 "status": "error",
                 "message": "Data not found"
@@ -46,7 +46,7 @@ async def update(pool: str, resource_id: str, request: UpdateRequest):
     for key, value in request.content.items():
         await storage.save(resource_uuid, key, value)
     
-    return ORJSONResponse(
+    return JSONResponse(
         {
             "status": "success",
             "message": "Data updated"

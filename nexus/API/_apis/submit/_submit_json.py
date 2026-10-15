@@ -1,6 +1,6 @@
 import orjson
 
-from fastapi.responses import ORJSONResponse
+from fastapi.responses import JSONResponse
 from loguru import logger
 from uuid import uuid4
 
@@ -15,7 +15,7 @@ async def submit_json(pool: str, request: SubmitRequest):
     try:
         storage = Storage(path, pool)
     except ValueError as e:
-        return ORJSONResponse(
+        return JSONResponse(
             {
                 "status": "error",
                 "message": str(e)
@@ -30,7 +30,7 @@ async def submit_json(pool: str, request: SubmitRequest):
     for key, value in request.content.items():
         await storage.save(resource_uuid, key, value)
     
-    return ORJSONResponse(
+    return JSONResponse(
         {
             "status": "ok",
             "message": "submit success",

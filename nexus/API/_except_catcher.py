@@ -4,7 +4,7 @@ import traceback
 from ._resource import Resource
 from datetime import datetime
 from fastapi import Request
-from fastapi.responses import Response, ORJSONResponse
+from fastapi.responses import Response, JSONResponse
 from typing import Callable, Awaitable
 from loguru import logger
 
@@ -21,7 +21,7 @@ async def except_catcher(request: Request, call_next: Callable[[Request], Awaita
             error = str(e),
             traceback = traceback.format_exc(),
         )
-        return ORJSONResponse(
+        return JSONResponse(
             status_code=500,
             content={
                 "error": str(e),
